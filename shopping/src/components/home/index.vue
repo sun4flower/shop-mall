@@ -63,7 +63,7 @@
                 <span>绿色无公害,无污染,无公害,天然有机蔬菜吃的放心，健康第一，安全保证，确保蔬菜安全</span>
             </div>
             <ul class="listsItem" ref="listItem">
-                <li v-for="(item,index) in data" :key="index">
+                <li v-for="(item,index) in newdata" :key="index">
                     <ShopItem :item="item"></ShopItem>
                 </li>
             </ul>
@@ -86,6 +86,11 @@ export default {
             data: "",
             url: "https://h5api.m.taobao.com/h5/mtop.taobao.wireless.home.load/1.0/?jsv=2.4.11&appKey=12574478&t=1528795798675&sign=b5cc9e50d50441bef8be7813b540488a&api=mtop.taobao.wireless.home.load&v=1.0&type=jsonp&dataType=jsonp&callback=mtopjsonp1&data=%7B%22containerId%22%3A%22main%22%2C%22ext%22%3A%22%7B%5C%22h5_platform%5C%22%3A%5C%22h5%5C%22%2C%5C%22h5_ttid%5C%22%3A%5C%2260000%40taobao_h5_1.0.0%5C%22%7D%22%7D"
         }
+    },
+    computed:{
+       newdata(){
+            return this.data
+       }
     },
     mounted() {
         new Swiper(this.$refs.swiper, {
@@ -248,7 +253,7 @@ export default {
   color: #ff6d00;
 }
 .tit span {
-  line-height: 20px;
+  line-height:.3rem;
   font-size: 0.18rem;
 }
 .listsItem {

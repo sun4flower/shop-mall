@@ -46,16 +46,19 @@ module.exports = function (app) {
         }
     });
     app.post("/getShopitem", (req, res) => {
-        jwt.verify(req.body.token, "1601E", (err) => {
+        jwt.verify(req.body.token, "1601E", (err, decoded) => {
             if (err) {
                 res.json({
                     code: 0,
                     msg: err
                 })
-            }else{
+            } else {
+                let pathname = path.join(__dirname, "./mock/cart.json")
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
                 res.json({
-                    code:1,
-                    msg: "success"
+                    code: 1,
+                    msg: "success",
+                    data: list[decoded.username]
                 })
             }
         })
@@ -67,14 +70,84 @@ module.exports = function (app) {
                     code: 0,
                     msg: err
                 })
-            }else{
+            } else {
                 res.json({
-                    code:1,
+                    code: 1,
                     msg: "success"
                 })
             }
         })
     })
-   
-   
+    app.post("/addCart", (req, res) => {
+        if (req.body.token == null) {
+            res.json({ code: 2, msg: "请登录" })
+        } else {
+            jwt.verify(req.body.token, "1601E", (err, decoded) => {
+                if (err) {
+                    res.json({ code: 0, msg: "登录超时，请重新登录" })
+                } else {
+                    let pathname = path.join(__dirname, "./mock/cart.json")
+                    let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'))
+                    if (list[decoded.username]) {
+                        let status = list[decoded.username].some(i => {
+                            if (i.sid == req.body.item.sid) {
+                                ++i.count;
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                        if (!status) {
+                            let obj = {
+                                count: 1,
+                                ...req.body.item
+                            }
+                            list[decoded.username].push(obj)
+                        }
+
+                    } else {
+                        list[decoded.username] = [{ count: 1, ...req.body.item }]
+                    }
+                    fs.writeFile(pathname, JSON.stringify(list), (err) => {
+                        if (err) {
+                            res.json({ code: 0, msg: err })
+                        } else {
+                            res.json({ code: 1, msg: "success" })
+                        }
+                    })
+                }
+
+            })
+        }
+
+    })
+    app.post("/addNum", (req, res) => {
+        jwt.verify(req.body.token, "1601E", (err, decoded) => {
+            if (err) {
+                res.json({ code: 0, msg: err })
+            } else {
+                let pathname = path.join(__dirname, "./mock/cart.json")
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
+                let status = list[decoded.username].some(i => {
+                    if (i.sid == req.body.item.sid) {
+                        ++i.count;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })
+
+                if (status) {
+                    fs.writeFile(pathname, JSON.stringify(list), (err) => {
+                        if (err) {
+                            res.json({ code: 0, msg: err })
+                        } else {
+                            res.json({ code: 1, msg: "success" })
+                        }
+                    })
+                }
+            }
+        })
+    })
+
 }

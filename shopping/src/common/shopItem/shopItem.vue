@@ -6,10 +6,15 @@
       </dt>
       <dd>
         <h4>{{item.wname}}</h4>
-        <p>
+        <div>
           <span>￥{{item.jdPrice}}</span>
-          <i class="icon iconfont icon-gouwuche" @click="addItem(item)"></i>
-        </p>
+          <i class="icon iconfont icon-gouwuche" @click="addItem(item)" ref="btn"></i>
+          <!-- <p class="btns">
+            <span>-</span>
+            <span>{{item.count}}</span>
+            <span @click="addNum(item)">+</span>
+          </p> -->
+        </div>
       </dd>
     </dl>
     <dl v-else class="store">
@@ -26,11 +31,14 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
+import { getCookie } from "../../utils/cookies"
+import observer from "../../utils/observer";
 export default {
   props: ["item"],
   data() {
     return {
-      price: null
+      price: null,
+      num:1
     }
   },
   mounted() {
@@ -41,9 +49,26 @@ export default {
     goToDetail(url) {
       this.$router.push({ path: "/detail", query: { url: url } })
     },
-    addItem(i) {
-      this.addItem_A(i)
-
+    addItem(item) {
+      this.http.post("http://localhost:3000/addCart", { token: getCookie("token"), item: item }).then(res => {
+        if (res.data.code == 0) {
+          alert("登录超时，请重新登录")
+          this.$router.push({ name: "login" })
+        } else {
+          //this.$refs.btn.classList.add("active")
+         
+          alert("添加成功")
+        }
+      })
+    },
+    addNum() {
+       this.http.post("http://localhost:3000/addNum", { token: getCookie("token"), item: this.item }).then(res => {
+         if(res.data.code==1){
+           this.num++;
+         }else{
+           alert("添加失败")
+         }
+      })
     }
   }
 }
@@ -66,20 +91,26 @@ dl dd h4 {
   line-height: 20px;
   font-size: 0.2rem;
 }
-dl dd p {
+dl dd div {
   display: flex;
   justify-content: space-between;
   padding: 0 5px;
   height: 40px;
   line-height: 40px;
+  position: relative;
 }
-dl dd p span {
+dl dd div span {
   color: red;
   font-size: 0.25rem;
   line-height: 35px;
 }
-dl dd p i.icon {
+dl dd div i.icon {
   font-size: 0.4rem;
+  background: #fff;
+  z-index: 99;
+}
+.active {
+  display: none;
 }
 li dl {
   width: 100%;
@@ -115,6 +146,11 @@ dl dd p i.icon {
 .store {
   line-height: 30px;
   font-size: 0.22rem;
+}
+.btns {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 </style>
 

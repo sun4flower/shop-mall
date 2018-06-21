@@ -54,11 +54,15 @@ module.exports = function (app) {
                 })
             } else {
                 let pathname = path.join(__dirname, "./mock/cart.json")
-                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'))
+                let arr=list[decoded.username].map(i=>{
+                    i.book=true;
+                    return i;
+                })
                 res.json({
                     code: 1,
                     msg: "success",
-                    data: list[decoded.username]
+                    data: arr
                 })
             }
         })
@@ -135,8 +139,7 @@ module.exports = function (app) {
                     } else {
                         return false;
                     }
-                })
-
+                });
                 if (status) {
                     fs.writeFile(pathname, JSON.stringify(list), (err) => {
                         if (err) {
@@ -149,5 +152,63 @@ module.exports = function (app) {
             }
         })
     })
+    app.post("/subNum", (req, res) => {
+        jwt.verify(req.body.token, "1601E", (err, decoded) => {
+            if (err) {
+                res.json({ code: 0, msg: err })
+            } else {
+                let pathname = path.join(__dirname, "./mock/cart.json")
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
+                let status = list[decoded.username].some(i => {
+                    if (i.sid == req.body.item.sid) {
+                        if (i.count <= 1) {
+                            i.count = 1;
+                        }
+                        --i.count;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                if (status) {
+                    fs.writeFile(pathname, JSON.stringify(list), (err) => {
+                        if (err) {
+                            res.json({ code: 0, msg: err })
+                        } else {
+                            res.json({ code: 1, msg: "success" })
+                        }
+                    })
+                }
+            }
+        })
+    })
+    app.post("/cancel", (req, res) => {
+        jwt.verify(req.body.token, "1601E", (err, decoded) => {
+            if (err) {
+                res.json({ code: 0, msg: err })
+            } else {
+                let pathname = path.join(__dirname, "./mock/cart.json")
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
+                let status = list[decoded.username].some(i => {
+                    if (i.sid == req.body.item.sid) {
+                        i.book = !i.book;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                if (status) {
+                    fs.writeFile(pathname, JSON.stringify(list), (err) => {
+                        if (err) {
+                            res.json({ code: 0, msg: err })
+                        } else {
+                            res.json({ code: 1, msg: "success" })
+                        }
+                    })
+                }
+            }
+        })
+    })
+
 
 }

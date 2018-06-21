@@ -3,82 +3,69 @@
         <header class="header">
             <i class="icon iconfont icon-xaingzuo"></i>
             <span>购物车</span>
-            <i class="icon iconfont icon-xiaoxi"></i>
+            <p>编辑
+                <i class="icon iconfont icon-xiaoxi"></i>
+            </p>
+
         </header>
         <div class="scroll-box">
             <div class="content" v-if="shopCar">
-                 <Items  v-for="(item,index) in shopCar" :key="index" :item="item"></Items>
+                <Items v-for="(item,index) in shopCar" :key="index" :item="item"></Items>
             </div>
-           
-            <!-- <ul class="content" v-if="shopCar">
-                <li v-for="(item,index) in shopCar" :key="index">
-                    <dl>
-                        <dt>
-                            <input type="checkbox" checked="item.book">
-                            <img :src="item.imageurl" alt="">
-                        </dt>
-                        <dd>
-                            <p>
-                                {{item.wname}}
-                            </p>
-                            <div>
-                                <aside class="divri">
-                                    <span style="color:#a3a3a3;">x{{item.canAddCart}}</span>
-                                    <p style="color:red;">￥{{item.jdPrice}}</p>
-                                </aside>
-                                <aside class="btns">
-                                    <span>-</span>
-                                    <span>{{item.canAddCart}}</span>
-                                    <span>+</span>
-                                </aside>
-                            </div>
-
-                        </dd>
-                    </dl>
-                </li>
-            </ul> -->
-            <div  class ="car" v-else>
+            <div class="car" v-else>
                 购物车为空
             </div>
         </div>
-
         <div class="price">
-            <p class="check"><input type="checkbox">
+            <p class="check">
+                <i :class="flag?'iconfont icon-checked':'iconfont icon-unchecked'" @click="cancel"></i>
                 <span>全选</span>
             </p>
             <p class="all">
-                <span>合计</span>
+                <span>合计: {{count}}</span>
                 <span>运费</span>
             </p>
             <p class="account">结算</p>
         </div>
     </div>
-
 </template>
 <script>
 import { getCookie } from "../../utils/cookies"
 import Items from "./items"
 import axios from "axios"
-import { mapState,mapActions } from "vuex"
+import { mapState, mapActions, mapGetters } from "vuex"
+import observer from "../../utils/observer"
 export default {
     data() {
         return {
-            shopCar: []
+            sum: 0,
+            flag: true
         }
     },
-    methods:{
-
+    watch:{
+        checkAll(n,o){
+            this.flag=n
+        }
     },
     mounted() {
-        this.http.post("http://localhost:3000/getShopitem", { token: getCookie("token") }).then(res => {
-            if (res.data.code == 0) {
-                this.$router.push({ name: "login", params: { from: to.name } })
-            } else {
-                this.shopCar=res.data.data;
-            }
-        });
+        this.getCart_A();
+        
     },
-    components:{
+    computed: {
+        ...mapState(["shopCar"]),
+        ...mapState(["checkAll"]),
+         ...mapState(["count"])
+    },
+    methods: {
+        ...mapActions(["getCart_A"]),
+        ...mapActions(["checkAll_A"]),
+        cancel() {
+            this.flag=!this.flag;
+            this.checkAll_A(this.flag)
+            // observer.$send("sendMsg","ture")
+        }
+    },
+    components: {
         Items
     }
 }
@@ -132,11 +119,11 @@ export default {
   text-align: center;
   font-size: 0.23rem;
 }
-.car{
-    width:100%;
-    line-height: 60px;
-    font-size: 20px;
-    text-align: center;
+.car {
+  width: 100%;
+  line-height: 60px;
+  font-size: 20px;
+  text-align: center;
 }
 
 .pri {
@@ -152,6 +139,10 @@ export default {
   padding: 0 10px;
   text-align: center;
   line-height: 0.6rem;
+}
+.check i.iconfont {
+  font-size: 0.4rem;
+  color: red;
 }
 </style>
 

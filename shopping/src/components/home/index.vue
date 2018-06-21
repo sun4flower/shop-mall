@@ -64,7 +64,9 @@
             </div>
             <ul class="listsItem" ref="listItem">
                 <li v-for="(item,index) in newdata" :key="index">
-                    <ShopItem :item="item"></ShopItem>
+                    <keep-alive>
+                        <ShopItem :item="item"></ShopItem>
+                    </keep-alive>
                 </li>
             </ul>
             <p class="more" ref="more">加载更多</p>
@@ -87,10 +89,10 @@ export default {
             url: "https://h5api.m.taobao.com/h5/mtop.taobao.wireless.home.load/1.0/?jsv=2.4.11&appKey=12574478&t=1528795798675&sign=b5cc9e50d50441bef8be7813b540488a&api=mtop.taobao.wireless.home.load&v=1.0&type=jsonp&dataType=jsonp&callback=mtopjsonp1&data=%7B%22containerId%22%3A%22main%22%2C%22ext%22%3A%22%7B%5C%22h5_platform%5C%22%3A%5C%22h5%5C%22%2C%5C%22h5_ttid%5C%22%3A%5C%2260000%40taobao_h5_1.0.0%5C%22%7D%22%7D"
         }
     },
-    computed:{
-       newdata(){
+    computed: {
+        newdata() {
             return this.data
-       }
+        }
     },
     mounted() {
         new Swiper(this.$refs.swiper, {
@@ -104,9 +106,14 @@ export default {
         //     console.log(res)
         // })
     },
+    activated: function () {
+        this.http.get("/index/recommend.action?_format_=json&page=1").then(res => {
+            this.data = JSON.parse(res.data.recommend).wareInfoList;
+        })
+    },
     methods: {
         gotoSearch() {
-            this.$router.push({path:"/search",query:{name:"Home"}})
+            this.$router.push({ path: "/search", query: { name: "Home" } })
         },
         onScroll() {
             let scrT = this.$refs.scrollBox.scrollTop;
@@ -115,9 +122,9 @@ export default {
             if (scrH - docH - scrT < 10 && this.flag) {
                 this.flag = false;
                 this.n = this.n + 1;
-                this.http.get("/index/recommend.action?_format_=json&page="+`${this.n}`).then(res => {
-                    this.data = [...this.data,...JSON.parse(res.data.recommend).wareInfoList]
-                    this.flag=true;
+                this.http.get("/index/recommend.action?_format_=json&page=" + `${this.n}`).then(res => {
+                    this.data = [...this.data, ...JSON.parse(res.data.recommend).wareInfoList]
+                    this.flag = true;
                 });
             }
         }
@@ -253,7 +260,7 @@ export default {
   color: #ff6d00;
 }
 .tit span {
-  line-height:.3rem;
+  line-height: 0.3rem;
   font-size: 0.18rem;
 }
 .listsItem {
@@ -272,8 +279,8 @@ export default {
   text-align: center;
   font-size: 0.2rem;
 }
-.swiper-container{
-    height: 3.4rem;
+.swiper-container {
+  height: 3.4rem;
 }
 </style>
 

@@ -11,7 +11,8 @@ let store = new Vuex.Store({
         checkAll: true,
         check: true,
         count: null,
-        n: null
+        n: null,
+        deleteArr:[]
 
     },
     actions: {
@@ -39,6 +40,12 @@ let store = new Vuex.Store({
         },
         check_A({ commit }, payload) {
             commit("check_M", payload)
+
+        },
+        refresh_A({commit}){
+            axios.post("http://localhost:3000/getShopitem", { token: getCookie("token") }).then(res => {
+                commit("refresh_M",res.data.data)
+            });
         }
     },
     mutations: {
@@ -52,28 +59,25 @@ let store = new Vuex.Store({
             if (payload.infor) {
                 let sum = 0;
                 state.shopCar.map(i => {
-                    console.log(i.sid)
-                    console.log(payload.infor)
                     if (i.sid == payload.infor.item.sid) {
                         sum += i.jdPrice * 1;
                     }
                 })
-                console.log(payload.infor.flag)
                 if (payload.infor.flag) {
-                    console.log(3333)
-                    console.log(sum)
                     if (payload.infor.data) {
-                        state.count = state.count + sum;
+                        state.count = state.count*1 + sum;
                     } else {
-                        state.count = state.count - sum;
+                        if(state.count==0){
+                            return;
+                        }
+                        console.log(111)
+                        state.count = state.count *1- sum;
                     }
-
-                } else {
-                    console.log(444)
 
                 }
             } else {
                 state.n = state.shopCar.length;
+                state.deleteArr=state.shopCar;
                 let sum = 0;
                 state.shopCar.map(i => {
                     sum += i.count * i.jdPrice
@@ -103,21 +107,29 @@ let store = new Vuex.Store({
             let s = payload.item.count * payload.item.jdPrice;
             if (payload.flag) {
                 state.n = state.n + 1;
-                console.log(state.n)
                 if (state.n == state.shopCar.length) {
                     state.checkAll = true;
                     state.check = true;
+                    console.log(111)
                 }
-                state.count = state.count + s;
+                
+                state.count = state.count*1 + s;
             } else {
                 state.n = state.n - 1;
                 state.checkAll = false;
-                state.count = state.count - s;
+                state.count = (state.count*1 - s).toFixed(2);
                 if (state.n == 0) {
                     state.check = false;
                 }
 
             }
+        },
+        refresh_M(state,payload){
+            state.shopCar=payload;
+            state.count=0;
+            state.n=0;
+            state.check = false;
+            state.checkAll = false;
         }
     }
 })

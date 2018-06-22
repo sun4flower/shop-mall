@@ -47,6 +47,11 @@ export default {
     computed: {
         ...mapState(["check"])
     },
+    mounted(){
+        // observer.$on("sendMsg",(msg)=>{
+        //     observer.$emit("send",this.flag)
+        // })
+    },
     methods: {
         ...mapActions(["getCart_A"]),
         ...mapActions(["check_A"]),
@@ -62,9 +67,10 @@ export default {
         },
         cancel(item) {
             this.flag = !this.flag;
-            console.log(item)
             this.check_A({ flag: this.flag, item: item })
-        }
+            observer.$emit("send",{flag:this.flag,item:this.item})
+        },
+        
     }
 }
 </script>

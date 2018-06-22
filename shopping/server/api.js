@@ -55,14 +55,10 @@ module.exports = function (app) {
             } else {
                 let pathname = path.join(__dirname, "./mock/cart.json")
                 let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'))
-                let arr=list[decoded.username].map(i=>{
-                    i.book=true;
-                    return i;
-                })
                 res.json({
                     code: 1,
                     msg: "success",
-                    data: arr
+                    data: list[decoded.username] || []
                 })
             }
         })
@@ -94,9 +90,10 @@ module.exports = function (app) {
                     let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'))
                     if (list[decoded.username]) {
                         let status = list[decoded.username].some(i => {
-                            if (i.sid == req.body.item.sid) {
+                            if (i.wname == req.body.item.wname) {
                                 ++i.count;
                                 return true;
+
                             } else {
                                 return false;
                             }
@@ -206,6 +203,38 @@ module.exports = function (app) {
                         }
                     })
                 }
+            }
+        })
+    })
+    app.post("/delete", (req, res) => {
+        jwt.verify(req.body.token, "1601E", (err, decoded) => {
+            if (err) {
+                res.json({ code: 0, msg: err })
+            } else {
+                let pathname = path.join(__dirname, "./mock/cart.json")
+                let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
+                let arr = []
+                list[decoded.username].map((item, ind) => {
+                    req.body.id.map(i => {
+                        if (item.wname == i) {
+                            arr.push(ind)
+                        }
+                    })
+                })
+                let newarr = []
+                let str = ""
+                arr.map(i => {
+                     newarr.push(list[decoded.username].slice(i, i + 1)[0])
+                })
+                list[decoded.username]=newarr;
+                fs.writeFile(pathname, JSON.stringify(list), (err) => {
+                    if (err) {
+                        res.json({ code: 0, msg: err })
+                    } else {
+                        res.json({ code: 1, msg: "success" })
+                    }
+                })
+
             }
         })
     })

@@ -3,7 +3,8 @@
         <header class="header">
             <i class="icon iconfont icon-xaingzuo"></i>
             <span>购物车</span>
-            <p>编辑
+            <p>
+                <span @click="compile">编辑</span>
                 <i class="icon iconfont icon-xiaoxi"></i>
             </p>
 
@@ -25,8 +26,9 @@
                 <span>合计: {{count}}</span>
                 <span>运费</span>
             </p>
-            <p class="account">结算</p>
+            <p class="account" @click="deletes()">{{msg}}</p>
         </div>
+
     </div>
 </template>
 <script>
@@ -39,30 +41,63 @@ export default {
     data() {
         return {
             sum: 0,
-            flag: true
+            flag: true,
+            msg: "结算",
+            arr: []
         }
     },
-    watch:{
-        checkAll(n,o){
-            this.flag=n
+    watch: {
+        checkAll(n, o) {
+            this.flag = n
         }
     },
     mounted() {
         this.getCart_A();
-        
+        observer.$on("send", (msg) => {
+            if (!msg.flag) {
+                if (this.arr.indexOf(msg.item.wname)) {
+                    this.arr.push(msg.item.wname)
+                }
+            } else {
+                this.arr.map((i, ind) => {
+                    this.arr.splice(ind, 1)
+                })
+            }
+        })
     },
     computed: {
         ...mapState(["shopCar"]),
         ...mapState(["checkAll"]),
-         ...mapState(["count"])
+        ...mapState(["count"]),
+
     },
     methods: {
         ...mapActions(["getCart_A"]),
         ...mapActions(["checkAll_A"]),
+        ...mapActions(["deleteItem_A"]),
+        ...mapActions(["refresh_A"]),
         cancel() {
-            this.flag=!this.flag;
+            this.flag = !this.flag;
             this.checkAll_A(this.flag)
-            // observer.$send("sendMsg","ture")
+        },
+        compile() {
+            if (this.msg == "结算") {
+                this.msg = "删除"
+            } else {
+                this.msg = "结算"
+            }
+        },
+        deletes() {
+            if (this.msg == "删除") {
+                axios.post("http://localhost:3000/delete", { token: getCookie("token"), id: this.arr }).then(res => {
+                    if (res.data.code == 0) {
+                        alert("删除失败")
+                    } else {
+                        this.refresh_A()
+                    }
+                });
+            }
+
         }
     },
     components: {

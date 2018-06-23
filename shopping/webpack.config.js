@@ -5,6 +5,7 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
+    chunkFilename: '[name].bundle.js',
     publicPath: '/dist/',
     filename: 'build.js'
   },
@@ -41,7 +42,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      '@':path.resolve(__dirname,"./src")
     },
     extensions: ['*', '.js', '.vue', '.json']
   },

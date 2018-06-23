@@ -9,11 +9,6 @@
         <div>
           <span>￥{{item.jdPrice}}</span>
           <i class="icon iconfont icon-gouwuche" @click="addItem(item)" ref="btn"></i>
-          <!-- <p class="btns">
-            <span>-</span>
-            <span>{{item.count}}</span>
-            <span @click="addNum(item)">+</span>
-          </p> -->
         </div>
       </dd>
     </dl>
@@ -52,12 +47,10 @@ export default {
     addItem(item) {
       this.http.post("http://localhost:3000/addCart", { token: getCookie("token"), item: item }).then(res => {
         if (res.data.code == 0) {
-          alert("登录超时，请重新登录")
+          observer.$emit("send","登录超时，请重新登录")
           this.$router.push({ name: "login" })
         } else {
-          //this.$refs.btn.classList.add("active")
-         
-          alert("添加成功")
+         observer.$emit("send","添加成功")
         }
       })
     },
@@ -66,7 +59,7 @@ export default {
          if(res.data.code==1){
            this.num++;
          }else{
-           alert("添加失败")
+           observer.$emit("send","添加失败")
          }
       })
     }

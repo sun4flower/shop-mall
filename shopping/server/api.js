@@ -130,7 +130,7 @@ module.exports = function (app) {
                 let pathname = path.join(__dirname, "./mock/cart.json")
                 let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
                 let status = list[decoded.username].some(i => {
-                    if (i.sid == req.body.item.sid) {
+                    if (i.wname == req.body.item.wname) {
                         ++i.count;
                         return true;
                     } else {
@@ -157,7 +157,7 @@ module.exports = function (app) {
                 let pathname = path.join(__dirname, "./mock/cart.json")
                 let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
                 let status = list[decoded.username].some(i => {
-                    if (i.sid == req.body.item.sid) {
+                    if (i.wname == req.body.item.wname) {
                         if (i.count <= 1) {
                             i.count = 1;
                         }
@@ -187,7 +187,7 @@ module.exports = function (app) {
                 let pathname = path.join(__dirname, "./mock/cart.json")
                 let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
                 let status = list[decoded.username].some(i => {
-                    if (i.sid == req.body.item.sid) {
+                    if (i.wname == req.body.item.wname) {
                         i.book = !i.book;
                         return true;
                     } else {

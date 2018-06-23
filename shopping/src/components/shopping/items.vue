@@ -47,11 +47,6 @@ export default {
     computed: {
         ...mapState(["check"])
     },
-    mounted(){
-        // observer.$on("sendMsg",(msg)=>{
-        //     observer.$emit("send",this.flag)
-        // })
-    },
     methods: {
         ...mapActions(["getCart_A"]),
         ...mapActions(["check_A"]),

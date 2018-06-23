@@ -4,6 +4,7 @@ let instance=axios.create({
        // "Content-Type":"application/json"
     }
 })
+console.log(process.env.NODE_ENV)
 instance.interceptors.request.use((config)=>{
     return config
 },(err)=>{

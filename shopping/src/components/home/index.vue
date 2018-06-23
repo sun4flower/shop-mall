@@ -71,15 +71,16 @@
             </ul>
             <p class="more" ref="more">加载更多</p>
         </div>
-
+       <toast ref="toast"></toast>
     </div>
 </template>
 <script>
-import Swiper from "swiper"
+//import Swiper from "swiper"
 import "swiper/dist/css/swiper.css"
 import ShopItem from "../../common/shopItem/shopItem"
 import jsonp from "../../utils/jsonp"
 import axios from "axios"
+import observer from '../../utils/observer';
 export default {
     data() {
         return {
@@ -95,21 +96,19 @@ export default {
         }
     },
     mounted() {
-        new Swiper(this.$refs.swiper, {
-            // autoplay:true
-        }),
+        observer.$on("send",(msg)=>{
+            this.$refs.toast.active(msg)
+        })
+        // new Swiper(this.$refs.swiper, {
+        //     // autoplay:true
+        // }),
 
-            this.http.get("/index/recommend.action?_format_=json&page=1").then(res => {
-                this.data = JSON.parse(res.data.recommend).wareInfoList;
-            })
-        // jsonp(this.url,"mtopjsonp1").then(res=>{
-        //     console.log(res)
-        // })
-    },
-    activated: function () {
         this.http.get("/index/recommend.action?_format_=json&page=1").then(res => {
             this.data = JSON.parse(res.data.recommend).wareInfoList;
         })
+        // jsonp(this.url,"mtopjsonp1").then(res=>{
+        //     console.log(res)
+        // })
     },
     methods: {
         gotoSearch() {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <header class="header">
-            <i class="icon iconfont icon-shezhi"></i>
+            <i class="icon iconfont icon-shezhi" @click="signOut()"></i>
             <span>我的717商城</span>
              <i class="icon iconfont icon-xiaoxi"></i>
         </header>
@@ -35,7 +35,7 @@
                 <i class="icon iconfont icon-shouhou"></i>
                 <span>售后</span>
             </li>
-            <li>
+            <li @click="goToOrder">
                 <i class="icon iconfont icon-wodedingdan"></i>
                 <span>我的订单</span>
             </li>
@@ -63,6 +63,7 @@
                 <i class="icon iconfont icon-webicon213"></i>
             </li>
         </ul>
+        <toast ref="toast"></toast>
     </div>
 </template>
 <script>
@@ -70,6 +71,12 @@ export default {
     methods:{
         addAdmin(){
             this.$router.push("/region")
+        },
+        signOut(){
+            this.$refs.toast.active("are you sure")
+        },
+        goToOrder(){
+            this.$router.push({name:"all"})
         }
     }
 }

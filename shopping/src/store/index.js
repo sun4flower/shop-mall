@@ -59,19 +59,23 @@ let store = new Vuex.Store({
             if (payload.infor) {
                 let sum = 0;
                 state.shopCar.map(i => {
-                    if (i.sid == payload.infor.item.sid) {
+                    if (i.wname == payload.infor.item.wname) {
                         sum += i.jdPrice * 1;
                     }
                 })
                 if (payload.infor.flag) {
                     if (payload.infor.data) {
-                        state.count = state.count*1 + sum;
+                        state.count = (state.count*1 + sum).toFixed(2);
                     } else {
-                        if(state.count==0){
+                        
+                        if(state.count<=0){
                             return;
+                        }else{
+                            
+                             state.count = (state.count *1- sum).toFixed(2);
                         }
-                        console.log(111)
-                        state.count = state.count *1- sum;
+                        
+                       
                     }
 
                 }
@@ -82,7 +86,7 @@ let store = new Vuex.Store({
                 state.shopCar.map(i => {
                     sum += i.count * i.jdPrice
                 })
-                state.count = sum;
+                state.count = sum.toFixed(2);
             }
         },
         checkAll_M(state, payload) {
@@ -110,7 +114,6 @@ let store = new Vuex.Store({
                 if (state.n == state.shopCar.length) {
                     state.checkAll = true;
                     state.check = true;
-                    console.log(111)
                 }
                 
                 state.count = state.count*1 + s;

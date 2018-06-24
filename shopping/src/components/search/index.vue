@@ -37,6 +37,7 @@ export default {
     }, 
     methods: {
         cancel() {
+           
             this.$router.push({name:this.$route.query.name})
         },
         goToSearch() {

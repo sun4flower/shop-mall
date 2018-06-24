@@ -112,7 +112,7 @@ export default {
     },
     methods: {
         gotoSearch() {
-            this.$router.push({ path: "/search", query: { name: "Home" } })
+            this.$router.push({ path: "/search", query: { name: "home" } })
         },
         onScroll() {
             let scrT = this.$refs.scrollBox.scrollTop;

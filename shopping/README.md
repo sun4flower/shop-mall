@@ -103,6 +103,6 @@
       * 第二种是global event bus 定义全局变量来实现组件间通讯
       * 第三种是vuex 本项目使用了vuex来实现组件间通讯 vuex中通过改变父子组件的checked来实现全选反选功能，当选中全部子组件的时候，通过数据长度和选中组件的个数来判断，如果相等，父组件checked，如不等，父组件unchecked·
     * 判断生产模式还是开发模式baseURL:process.env.NODE_ENV=="production"?testUrl:onlineUrl
-      向js脚本注入变量new webpack.DefinePlugin
+      向js脚本注入变量new webpack.DefinePlugin()
 4.  做项目时遇到了一个渲染问题，主要因为数据中有个别数据与其他数据不同，如商品列表数据中推荐了一些商店，在就需要不同的dom结构，我困扰了一天，最后想到了用v-if这     个指令来实现不同的dom渲染结构
 

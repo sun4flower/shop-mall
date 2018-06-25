@@ -71,6 +71,7 @@ export default {
     methods:{
         addAdmin(){
             this.$router.push("/region")
+            
         },
         signOut(){
             this.$refs.toast.active("are you sure")

@@ -25,7 +25,7 @@
     </div>
      
   </div>
-  <p class="msg">到底哦！！！</p>
+  <p class="msg">到底了哦！！！</p>
 </div>
  
 </template>

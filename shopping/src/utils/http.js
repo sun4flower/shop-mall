@@ -2,7 +2,8 @@ import axios from "axios"
 let instance=axios.create({
     header:{
        // "Content-Type":"application/json"
-    }
+    },
+    baseURL:"http://localhost:3000/"
 })
 console.log(process.env.NODE_ENV)
 instance.interceptors.request.use((config)=>{

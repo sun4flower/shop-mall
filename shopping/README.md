@@ -62,11 +62,15 @@
                     }]
                 }
             ]\
-    在做路由搭建的时候涉及到了一些路由拦截问题，以为涉及用户个人信息时，需要确定用户是否登录，这时用到了beforeRouteEnter，在进入用户的个人页面时，先向后台发送token，查看后台是否存在，如存在，用户可以访问，如果不存在需跳转到登录页面.</br>本项目在路由切换的时候使用了动态import(基于Promise的API)的方式，类实现异步加载模块。当然这种方法也有一定的弊端，比如客户的网可能时好时坏，在网速好的时候不能请求全部页面，也许客户请求的时候正好是网不好，就会慢一点，但是这个方法会加速客服的首页请求，因为他把打包好的bundle文件拆分了，就会加速首页请求。
-     * 具体使用方法<br />
+    在做路由搭建的时候涉及到了一些路由拦截问题，以为涉及用户个人信息时，需要确定用户是否登录，这时用到了beforeRouteEnter，在进入用户的个人页面时，先向后台发送token，查看后台是否存在，如存在，用户可以访问，如果不存在需跳转到登录页面.</br>
+    * 本项目在路由切换的时候使用了动态import(基于Promise的API)的方式，类实现异步加载模块。当然这种方法也有一定的弊端，比如客户的网可能时好时坏，在网速好的时候不能请求全部页面，也许客户请求的时候正好是网不好，就会慢一点，但是这个方法会加速客服的首页请求，因为他把打包好的bundle文件拆分了，就会加速首页请求。
+       * 具体使用方法<br />
         引入babel-plugin-syntax-dynamic-import 配置babelrc "plugins": ["syntax-dynamic-import"]
         const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue') 使用chunkFilename: '[name].bundle.js',可以另命名拆分的文件
-3.  项目中具体技术
+    * 客服在切换订单详情时，可以共用一个组件，当从不同组件进入同一组件时，可以使用动态路由传参的方法，根据参数不同，向后台发起不同的请求。
+      * 具体使用方法 <br />
+      需要在路由中先配好{path:"/orderPage/:type"}，在页面中 :to="{name:'orderPage',params:{type:'all'} 使用params传递不同的参数
+3.  项目中具体技术 
      * 在商品列表页涉及到下拉刷新问题，这里用到了offset、scrollTop等js原生方法。
     在做项目时模拟了一下后台，主要是我需要使用的各种端口，以及登录时发送cookies的加密，使用了jsonwebtoken来做token加密。在向后台请求数据时，需要结合vuex缓存数据，避免多次向服务器发起请求。
     * 项目中还涉及到了跨域问题，解决跨域有三种方式，分别是jsonp、proxy代理以及cors。
@@ -104,5 +108,15 @@
       * 第三种是vuex 本项目使用了vuex来实现组件间通讯 vuex中通过改变父子组件的checked来实现全选反选功能，当选中全部子组件的时候，通过数据长度和选中组件的个数来判断，如果相等，父组件checked，如不等，父组件unchecked·
     * 判断生产模式还是开发模式baseURL:process.env.NODE_ENV=="production"?testUrl:onlineUrl
       向js脚本注入变量new webpack.DefinePlugin()
-4.  做项目时遇到了一个渲染问题，主要因为数据中有个别数据与其他数据不同，如商品列表数据中推荐了一些商店，在就需要不同的dom结构，我困扰了一天，最后想到了用v-if这     个指令来实现不同的dom渲染结构
+    * 当客服更改头像时，需要向后台传输图片，需要将图片编码成二进制的数据流，共有两种方法
+      * 第一种是使用h5新的api=>formData,使用方法</br>let 实例化formData = new FormData() 添加图片formData.append('img', e.target.files[0])
+      请求后台接口时将图片作为参数传给后台，后台可以使用multer包来解析保存
+      * 第二种方法为form表单本身就有属性enctype="multipart/form-data"</br>
+        enctype：规定了form表单在发送到服务器时候编码方式。他有如下的三个值。 
+        ①application/x-www-form-urlencoded。默认的编码方式。但是在用文本的传输和MP3等大型文件的时候，使用这种编码就显得 效率低下。 
+        ②multipart/form-data 。 指定传输数据为二进制类型，比如图片、mp3、文件。 
+        ③text/plain。纯文体的传输。空格转换为 “+” 加号，但不对特殊字符编码。
+    * 添加地址时有多选框，这里使用了vue-multiselect
+
+4.  做项目时遇到了一个渲染问题，主要因为数据中有个别数据与其他数据不同，如商品列表数据中推荐了一些商店，在就需要不同的dom结构，我困扰了一天，最后想到了用v-if这个指令来实现不同的dom渲染结构
 

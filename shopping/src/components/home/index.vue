@@ -103,7 +103,7 @@ export default {
         //     // autoplay:true
         // }),
 
-        this.http.get("/index/recommend.action?_format_=json&page=1").then(res => {
+        axios.get("/index/recommend.action?_format_=json&page=1").then(res => {
             this.data = JSON.parse(res.data.recommend).wareInfoList;
         })
         // jsonp(this.url,"mtopjsonp1").then(res=>{
@@ -121,7 +121,7 @@ export default {
             if (scrH - docH - scrT < 10 && this.flag) {
                 this.flag = false;
                 this.n = this.n + 1;
-                this.http.get("/index/recommend.action?_format_=json&page=" + `${this.n}`).then(res => {
+               axios.get("/index/recommend.action?_format_=json&page=" + `${this.n}`).then(res => {
                     this.data = [...this.data, ...JSON.parse(res.data.recommend).wareInfoList]
                     this.flag = true;
                 });

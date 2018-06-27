@@ -15,8 +15,6 @@
 
             <div class="right">
                 <div class="scroller">
-                    <!-- {{newlist.secondLevelCategories}} -->
-                    <!-- <img :src="newlist.imageUrl" alt=""> -->
                     <div v-for="(item,index) in newlist" :key="index">
                         <h3>{{item.goodsTypeName}}</h3>
                         <div class="boxs">
@@ -25,7 +23,7 @@
                                     <img v-lazy="i.goodsTypeImgUrl" alt="">
                                 </dt>
                                 <dd>
-                                    <p>{{i.goodsTypeName}}</p>
+                                   {{i.goodsTypeName}}
                                 </dd>
                             </dl>
                         </div>
@@ -148,15 +146,19 @@ export default {
 .itemBox {
   width: 33.33%;
   padding: 10px;
+  height: 1.8rem;
+  display: flex;
+  flex-direction: column;
 }
-.scroller h3 {
-  text-indent: 2em;
+.itemBox dt{
+    width:100%;
+    height: 1rem;
 }
-.itemBox img {
-  width: 100%;
-}
-.img {
-  width: 100%;
+.itemBox>dd{
+    height: .5rem;
+    line-height: .5rem;
+    font-size: .2rem;
+    padding: 0;
 }
 </style>
 

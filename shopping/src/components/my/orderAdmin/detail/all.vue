@@ -1,19 +1,21 @@
 <template>
   <div class="lists">
+   
     <div class="list">
+      
       <div>
         <h3>
-          <p><img src="@/assets/img/2.jpg" alt="">
+          <p><img :src="item.imageurl" alt="">
             <span>小鱼的店</span>
           </p>
           <p>等待卖家发货</p>
         </h3>
         <dl>
-          <dt><img src="@/assets/img/2.jpg" alt=""></dt>
+          <dt><img :src="item.imageurl" alt=""></dt>
           <dd>
-            <p>维生素咀嚼片维生素咀嚼片维素咀嚼片维生素咀嚼片素咀嚼片维生素咀嚼片生素咀嚼片维生素咀嚼片维生素咀嚼片维生素咀嚼片</p>
+            <p>{{item.wname}}</p>
             <div>
-              <span>1899</span>
+              <span>{{item.jdPrice}}</span>
               <span>x1</span>
             </div>
           </dd>
@@ -26,13 +28,14 @@
         </div>
       </div>
     </div>
-    <p class="msg">到底了哦！！！</p>
+    <!-- <p class="msg">到底了哦！！！</p> -->
     <toast></toast>
   </div>
 </template>
 <script>
 
 export default {
+  props:["item"],
   methods: {
     sendMsg() {
       this.$toastBus.$emit("toast", "提醒卖家发货成功")

@@ -23,6 +23,7 @@ export default {
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
+  background: #fff;
 }
 </style>
 

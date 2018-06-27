@@ -6,10 +6,10 @@
       </dt>
       <dd>
         <h4>{{item.wname}}</h4>
-        <div>
+        <p>
           <span>￥{{item.jdPrice}}</span>
           <i class="icon iconfont icon-gouwuche" @click="addItem(item)" ref="btn"></i>
-        </div>
+        </p>
       </dd>
     </dl>
     <dl v-else class="store">
@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       price: null,
-      num:1
+      num: 1
     }
   },
   mounted() {
@@ -47,20 +47,20 @@ export default {
     addItem(item) {
       this.http.post("http://localhost:3000/addCart", { token: getCookie("token"), item: item }).then(res => {
         if (res.data.code == 0) {
-          observer.$emit("send","登录超时，请重新登录")
+          observer.$emit("send", "登录超时，请重新登录")
           this.$router.push({ name: "login" })
         } else {
-         observer.$emit("send","添加成功")
+          observer.$emit("send", "添加成功")
         }
       })
     },
     addNum() {
-       this.http.post("http://localhost:3000/addNum", { token: getCookie("token"), item: this.item }).then(res => {
-         if(res.data.code==1){
-           this.num++;
-         }else{
-           observer.$emit("send","添加失败")
-         }
+      this.http.post("http://localhost:3000/addNum", { token: getCookie("token"), item: this.item }).then(res => {
+        if (res.data.code == 1) {
+          this.num++;
+        } else {
+          observer.$emit("send", "添加失败")
+        }
       })
     }
   }
@@ -68,82 +68,41 @@ export default {
 </script>
 
 <style scoped>
-li dl {
+dl {
   width: 100%;
+  height: 4rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
-img {
+dl dt {
   width: 100%;
+  height: 3rem;
+}
+dl dt img {
+  width: 100%;
+  height: 100%;
+}
+dl dd {
+  height: 1rem;
 }
 dl dd h4 {
-  padding: 0 3px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-height: 20px;
+  height: 0.6rem;
+  line-height: 0.3rem;
   font-size: 0.2rem;
 }
-dl dd div {
+dl dd p{
   display: flex;
   justify-content: space-between;
-  padding: 0 5px;
-  height: 40px;
-  line-height: 40px;
-  position: relative;
 }
-dl dd div span {
-  color: red;
-  font-size: 0.25rem;
-  line-height: 35px;
-}
-dl dd div i.icon {
-  font-size: 0.4rem;
-  background: #fff;
-  z-index: 99;
-}
-.active {
-  display: none;
-}
-li dl {
-  width: 100%;
-}
-img {
-  width: 100%;
-}
-dl dd h4 {
-  padding: 0 3px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-height: 20px;
-  font-size: 0.2rem;
-}
-dl dd p {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 5px;
-  height: 40px;
-  line-height: 40px;
-}
-dl dd p span {
-  color: red;
-  font-size: 0.25rem;
-  line-height: 35px;
-}
-dl dd p i.icon {
-  font-size: 0.4rem;
-}
-.store {
-  line-height: 30px;
-  font-size: 0.22rem;
-}
-.btns {
-  position: absolute;
-  right: 0;
-  top: 0;
+dl dd p i.icon{
+  font-size: .3rem;
+  vertical-align: middle;
 }
 </style>
 

@@ -7,7 +7,7 @@
         </header>
         <div class="top">
             <div class="img">
-                <img src="../../assets/img/2.jpg" alt="">
+                <img :src="url" alt="">
                 <p>路飞</p>
             </div>
         </div>
@@ -21,23 +21,23 @@
         <ul class="order">
             <li>
                 <i class="icon iconfont icon-nopayment"></i>
-                <span>待付款</span>
+                <router-link :to="{name:'orderPage',params:{type:'pay'}}">待付款</router-link>
             </li>
             <li>
                <i class="icon iconfont icon-daishouhuo"></i>
-                <span>待收货</span>
+                <router-link :to="{name:'orderPage',params:{type:'receieve'}}">待收货</router-link>
             </li>
             <li>
                 <i class="icon iconfont icon-daifahuo"></i>
-                <span>代发货</span>
+                 <router-link :to="{name:'orderPage',params:{type:'send'}}">待发货</router-link>
             </li>
             <li>
                 <i class="icon iconfont icon-shouhou"></i>
-                <span>售后</span>
+                <router-link :to="{name:'orderPage',params:{type:'aftersale'}}">售后</router-link>
             </li>
-            <li @click="goToOrder">
+            <li>
                 <i class="icon iconfont icon-wodedingdan"></i>
-                <span>我的订单</span>
+                 <router-link :to="{name:'orderPage',params:{type:'all'}}">全部</router-link>
             </li>
         </ul>
         <ul class="list">
@@ -68,17 +68,24 @@
 </template>
 <script>
 export default {
+    data(){
+        return{
+            url:""
+        }
+    },
+    mounted(){
+         this.http.post("/getImage").then(res => {
+                this.url = res.data.data;
+            })
+    },
     methods:{
         addAdmin(){
             this.$router.push("/region")
             
         },
         signOut(){
-            this.$refs.toast.active("are you sure")
+            this.$router.push({name:"signOut"})
         },
-        goToOrder(){
-            this.$router.push({name:"all"})
-        }
     }
 }
 </script>

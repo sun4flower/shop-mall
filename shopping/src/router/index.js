@@ -14,15 +14,23 @@ import Detail from "../components/detail/detail"
 import Region from "../components/my/address/add"
 import NewAdd from "../components/my/address/newAdd"
 import OrderPage from "../components/my/orderAdmin/orderPage"
-import All from "../components/my/orderAdmin/detail/all"
-import Pay from "../components/my/orderAdmin/detail/pay"
-import AfterSale from "../components/my/orderAdmin/detail/afterSale"
-import Send from "../components/my/orderAdmin/detail/send"
-import Receice from "../components/my/orderAdmin/detail/receive"
-
+import SignOut from "../components/my/setting/signOut"
+import ItemDetail from "../components/home/detail/detail"
 
 Vue.use(Router)
 let router = new Router({
+    mode:'history',//默认是hash模式
+  scrollBehavior(to,from,savePosition){ // 在点击浏览器的“前进/后退”，或者切换导航的时候触发。
+    if (to.hash) {
+        console.log(to.hash)
+        return {
+          // 這個是透過 to.hash 的值來找到對應的元素
+          // 照你的 html 來看是不用多加處理這樣就可以了
+          // 例如你按下 #3 的連結，就會變成 querySelector('#3')，自然會找到 id = 3 的元素
+          selector: to.hash
+        }
+      }
+  },
     routes: [{
         path: "/",
         redirect: "/index/home"
@@ -73,30 +81,17 @@ let router = new Router({
         name:"register",
         component:Register
     },{
-        path:"/orderPage",
+        path:"/orderPage/:type",
         name:"orderPage",
         component:OrderPage,
-        children:[ {
-            path: "all",
-            name: "all",
-            component: All
-        },{
-            path: "pay",
-            name: "pay",
-            component: Pay
-        },{
-            path: "afterSale",
-            name: "afterSale",
-            component: AfterSale
-        },{
-            path: "send",
-            name: "send",
-            component: Send
-        },{
-            path: "receice",
-            name: "receice",
-            component: Receice
-        }]
+    },{
+        path:"/signOut",
+        name:"signOut",
+        component:SignOut
+    },{
+        path:"/itemDetail",
+        name:"itemDetail",
+        component:ItemDetail
     }]
 })
 

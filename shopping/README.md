@@ -74,7 +74,7 @@
      * 在商品列表页涉及到下拉刷新问题，这里用到了offset、scrollTop等js原生方法。
     在做项目时模拟了一下后台，主要是我需要使用的各种端口，以及登录时发送cookies的加密，使用了jsonwebtoken来做token加密。在向后台请求数据时，需要结合vuex缓存数据，避免多次向服务器发起请求。
     * 项目中还涉及到了跨域问题，解决跨域有三种方式，分别是jsonp、proxy代理以及cors。
-      * 第一种jsonp运用了动态创建scrip标签，用他的src属性访问跨域的js脚本，并且需要在全局准备一个函数，服务端会返回一段调用这个函数的js代码，并传递我们调用的数据，我们就可以在这个全局函数中得到这个参数\
+       第一种jsonp运用了动态创建scrip标签，用他的src属性访问跨域的js脚本，并且需要在全局准备一个函数，服务端会返回一段调用这个函数的js代码，并传递我们调用的数据，我们就可以在这个全局函数中得到这个参数\
     function jsonp(url, names) {
         return new Promise((resolve, reject) => {
                 window[names] = function (data) {
@@ -85,14 +85,14 @@
                 document.body.appendChild(script)
             })
          }
-      * 第二种proxy代理将设置好的端口代理到其他域名的服务器请求地址，changeOrigin: true是必须的参数，pathRewrite会重写url，将prox去掉
+      第二种proxy代理将设置好的端口代理到其他域名的服务器请求地址，changeOrigin: true是必须的参数，pathRewrite会重写url，将prox去掉
      "/proxy": {
         target: 'https://m.gome.com.cn',
         changeOrigin: true,
         pathRewrite: {
           '^/proxy': ''
         }
-      * 第三种cors 是cross origin resource shareing的缩写，跨源资源共享。
+       第三种cors 是cross origin resource shareing的缩写，跨源资源共享。
     这个方法主要后端对响应头进行设置
     res.header({
         "Access-Control-Allow-Origin": "*",

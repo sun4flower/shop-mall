@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let pathname = file.originalname.split(".")
-        cb(null, pathname[0] + '-' + Date.now() + "." + pathname[1])
+        cb(null, Date.now())
     }
 })
 

@@ -51,12 +51,12 @@ export default {
         ...mapActions(["getCart_A"]),
         ...mapActions(["check_A"]),
         addNum(item) {
-            this.http.post("http://localhost:3000/addNum", { token: getCookie("token"), item: item }).then(res => {
+            this.http.post("/addNum", { token: getCookie("token"), item: item }).then(res => {
                 this.getCart_A({ flag: this.flag, item: item ,data:true})
             })
         },
         subNum(item) {
-            this.http.post("http://localhost:3000/subNum", { token: getCookie("token"), item: item }).then(res => {
+            this.http.post("/subNum", { token: getCookie("token"), item: item }).then(res => {
                 this.getCart_A({ flag:this.flag, item: item,data:false})
             })
         },

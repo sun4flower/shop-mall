@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let pathname = file.originalname.split(".")
-        cb(null, Date.now())
+        cb(null, Date.now() + '.' + pathname[1])
     }
 })
 
@@ -349,25 +349,27 @@ module.exports = function (app) {
         })
     })
 
+    let str="";
     app.post("/getImage", (req, res) => {
+        console.log(str)
         fs.readdir("./upload/", (err, chunk) => {
             chunk.map((i, ind) => {
                 if (ind == chunk.length-1) {
                     return res.json({
                         code: 1,
-                        data: "http://localhost:3000/server/upload/" + i
+                        data: "http://192.168.191.1:3000/server/upload/" + i
                     })
-                }
-            })
-
+               }
+                
         })
     })
-    app.post("/setImage", upload.single('img'), (req, res) => {
-        img="http://localhost:3000/server/upload/" + req.file.filename;
-        res.json({
-            code: 1,
-            data: "http://localhost:3000/server/upload/" + req.file.filename
-        })
+})
 
+app.post("/setImage", upload.single('img'), (req, res) => {
+    str=req.file.filename;
+    res.json({
+        code: 1,
+        data: "http://192.168.191.1:3000/server/upload/" + req.file.filename
     })
+})
 }

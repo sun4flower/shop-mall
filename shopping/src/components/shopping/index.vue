@@ -89,7 +89,7 @@ export default {
         },
         deletes() {
             if (this.msg == "删除") {
-                axios.post("http://localhost:3000/delete", { token: getCookie("token"), id: this.arr }).then(res => {
+                axios.post("/delete", { token: getCookie("token"), id: this.arr }).then(res => {
                     if (res.data.code == 0) {
                         alert("删除失败")
                     } else {

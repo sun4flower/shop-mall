@@ -8,13 +8,16 @@
             <router-link replace :to="{name:'orderPage',params:{type:'receieve'}}">待收货</router-link>
             <router-link replace :to="{name:'orderPage',params:{type:'aftersale'}}">售后</router-link>
         </div>
-        <ul class="box">
-            <li v-for="(item,index) in list" :key="index">
-                <Item :item="item"></Item>
-            </li>
-        </ul>
+        <div class="box">
+            <ul class="list">
+                <li v-for="(item,index) in list" :key="index">
+                    <Item :item="item"></Item>
+                </li>
+            </ul>
+            <p class="msg">到底了哦！！！</p>
+        </div>
+
         <toast></toast>
-         <p class="msg">到底了哦！！！</p>
     </div>
 </template>
 <style>
@@ -53,7 +56,7 @@ export default {
 
             this.http.post("/getOrder", { token: getCookie("token"), type: n.params.type || "all" }).then(res => {
                 if (res.data.code == 0) {
-                    this.$router.push({name:"login",params:{from:"orderPage"}})
+                    this.$router.push({ name: "login", params: { from: "orderPage" } })
                 } else {
                     this.list = res.data.msg
                 }
@@ -71,7 +74,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background:#eee;
+  background: #eee;
 }
 .top {
   height: 0.9rem;
@@ -81,17 +84,23 @@ export default {
   justify-content: space-around;
   font-style: none;
   padding: 0.1rem 0;
-  background:#fff;
+  background: #fff;
 }
 .top a {
   color: #333;
 }
 .top a.router-link-active {
   color: red;
-  border-bottom:1px solid red;
+  border-bottom: 1px solid red;
 }
 .box {
   flex: 1;
+  overflow: scroll;
+  display:flex;
+    flex-direction:column;
+}
+.list{
+    flex:1;
 }
 .msg {
   height: 0.6rem;

@@ -45,7 +45,7 @@ export default {
       this.$router.push({ path: "/detail", query: { url: url } })
     },
     addItem(item) {
-      this.http.post("http://localhost:3000/addCart", { token: getCookie("token"), item: item }).then(res => {
+      this.http.post("/addCart", { token: getCookie("token"), item: item }).then(res => {
         if (res.data.code == 0) {
           observer.$emit("send", "登录超时，请重新登录")
           this.$router.push({ name: "login" })
@@ -55,7 +55,7 @@ export default {
       })
     },
     addNum() {
-      this.http.post("http://localhost:3000/addNum", { token: getCookie("token"), item: this.item }).then(res => {
+      this.http.post("/addNum", { token: getCookie("token"), item: this.item }).then(res => {
         if (res.data.code == 1) {
           this.num++;
         } else {

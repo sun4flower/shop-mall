@@ -2,7 +2,6 @@
   <div class="lists">
    
     <div class="list">
-      
       <div>
         <h3>
           <p><img :src="item.imageurl" alt="">
@@ -28,7 +27,7 @@
         </div>
       </div>
     </div>
-    <!-- <p class="msg">到底了哦！！！</p> -->
+   
     <toast></toast>
   </div>
 </template>
@@ -46,7 +45,6 @@ export default {
 <style scoped>
 .lists {
   background: #eee;
-  overflow: scroll;
   display: flex;
   flex-direction: column;
 }

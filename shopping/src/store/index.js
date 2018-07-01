@@ -27,7 +27,7 @@ let store = new Vuex.Store({
             }
         },
         getCart_A({ commit }, payload) {
-            axios.post("http://localhost:3000/getShopitem", { token: getCookie("token") }).then(res => {
+            axios.post("http://192.168.191.1:3000/getShopitem", { token: getCookie("token") }).then(res => {
                 if (res.data.code == 0) {
                     router.push({ name: "login", params: { from: "shop" } })
                 } else {
@@ -43,7 +43,7 @@ let store = new Vuex.Store({
 
         },
         refresh_A({commit}){
-            axios.post("http://localhost:3000/getShopitem", { token: getCookie("token") }).then(res => {
+            axios.post("http://192.168.191.1:3000/getShopitem", { token: getCookie("token") }).then(res => {
                 commit("refresh_M",res.data.data)
             });
         }

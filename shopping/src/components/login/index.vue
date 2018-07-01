@@ -13,8 +13,8 @@
     </form>
     <div class="submit">
 
-      <button @click="submit">立即登录</button>
-      <a href="">忘记密码</a>
+      <button type="button" @click="submit">立即登录</button>
+      <!-- <a href="">忘记密码</a> -->
     </div>
     <div class="bot">
       <p class="tit">
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script>
+import { setCookie, getCookie } from "@/utils/cookies"
 export default {
   data() {
     return {
@@ -51,33 +52,29 @@ export default {
   },
   methods: {
     backFn() {
-        this.$router.push({ name: "home" })
+      this.$router.push({ name: "home" })
     },
     submit() {
       let userReg = /^1[5836]\d{9}$/
+
        if (!userReg.test(this.form.username)) {
         alert("請輸入正確的手機號")
-        return
-      }
-      let pwdReg = /\d{6,}/
-      if (pwdReg.test(this.form.password)) {
-        alert("請輸入正確格式的密碼")
         return
       }
       if (this.form.username == "" || this.form.password == "" || this.form.repassword=="") {
            alert("不能為空")
         return
       }
-      this.http.post("http://localhost:3000/user",{username: this.form.username, password: this.form.password } ).then(res => {
-        if (res.data.code == 1) {
-          document.cookie=`token=${res.data.token}`;
-          console.log(this.$route.params.from)
-          if (this.$route.params.from != undefined) {
-            this.$router.push({name:this.$route.params.from})
-          } else {
-            this.$router.push({name:"home"})
-          }
 
+      this.http.post("/user", { username: this.form.username, password:this.form.password }).then(res => {
+        if (res.data.code == 1) {
+          setCookie("token", res.data.token);
+          if (this.$route.params.from != undefined) {
+            this.$router.push({ name: this.$route.params.from })
+          } else {
+            this.$router.push({ name: "home" })
+          }
+          alert(3)
         } else {
           alert(res.data.msg)
         }

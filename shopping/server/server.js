@@ -18,9 +18,11 @@ var ejs = require('ejs');  //我是新引入的ejs插件
 app.engine('html', ejs.__express);
 //设置视图引擎
 app.set('view engine', 'html');
-//console.log(path.resolve(__dirname)
 app.use(express.static(path.resolve(__dirname,"../")))
-app.get('/index/',function(req, res, next){
+app.get('/',function(req, res, next){
+    res.render('index', {title: 'HTML'});
+  });
+  app.get('/indexs/home',function(req, res, next){
     res.render('index', {title: 'HTML'});
   });
 api(app)

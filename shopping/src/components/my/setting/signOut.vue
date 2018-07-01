@@ -46,7 +46,6 @@ export default {
         getImage() {
             this.http.post("/getImage").then(res => {
                 this.url = res.data.data;
-                console.log(res)
             })
         },
         signout() {
@@ -63,6 +62,7 @@ export default {
             let formData = new FormData()
             formData.append('img', e.target.files[0])
             this.http.post("/setImage", formData).then(res => {
+                console.log(res)
                 this.url = res.data.data;
                 // this.getImage()
 

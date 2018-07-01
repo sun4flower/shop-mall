@@ -40,13 +40,8 @@ export default {
     },
     submit() {
       let userReg = /^1[5836]\d{9}$/
-      if (!userReg.test(this.form.username)) {
+      if (!userReg.test(str.trim(this.form.username))) {
         alert("請輸入正確的手機號")
-        return
-      }
-      let pwdReg = /\d{6,}/
-      if (pwdReg.test(this.form.password)) {
-        alert("請輸入正確格式的密碼")
         return
       }
       if (this.form.password != this.form.repassword) {
@@ -57,7 +52,7 @@ export default {
            alert("不能為空")
         return
       }
-      this.http.post("http://localhost:3000/user/register",{ username: this.form.username, password: this.form.password}).then(res => {
+      this.http.post("/user/register",{ username: str.trim(this.form.username), password:str.trim(this.form.password) }).then(res => {
           if(res.data.code==1){
              this.$router.push({ name: "login" })
           }else{

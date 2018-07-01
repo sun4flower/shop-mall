@@ -141,11 +141,12 @@ export default {
 .img{
     width:60px;
     margin:0 auto;
-    padding-top: 10px;
+    padding-top: 5px;
     text-align: center;
 }
 .img img{
-    width:80%;
+    width:50px;
+    height: 50px;
     border-radius: 50%;
 }
 .img p{

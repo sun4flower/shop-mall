@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
-import Index from "../components/Index/index"
+import Indexs from "../components/Index/index"
 import Home from "../components/home/index"
 import Login from "../components/login/index"
 import Register from "../components/register/register"
@@ -16,7 +16,7 @@ import NewAdd from "../components/my/address/newAdd"
 import OrderPage from "../components/my/orderAdmin/orderPage"
 import SignOut from "../components/my/setting/signOut"
 import ItemDetail from "../components/home/detail/detail"
-
+import {getCookie} from "../utils/cookies"
 Vue.use(Router)
 let router = new Router({
     mode:'history',//默认是hash模式
@@ -33,11 +33,11 @@ let router = new Router({
   },
     routes: [{
         path: "/",
-        redirect: "/index/home"
+        redirect: "/indexs/home"
     }, {
-        path: "/index",
-        name: "Index",
-        component: Index,
+        path: "/indexs",
+        name: "Indexs",
+        component: Indexs,
         children: [{
             path: "home",
             name: "home",
@@ -94,5 +94,23 @@ let router = new Router({
         component:ItemDetail
     }]
 })
+router.beforeEach((to, from, next) => {
+    let token = getCookie('token')
+    if (to.name == 'my' || to.name == 'shopping') { // 判断是不是点击的我的或者购物车页面
+      if (!token) { // 没有token值到登陆页面 获取当前name传入query里
+        next({
+          name: 'login',
+          query: {
+            from: to.name // query 传参 登陆进去后直接接入当前页面
+          }
+        })
+      } else {
+        next();
+      }
+    } else {
+      next()
+    }
+  })
+  
 
 export default router;

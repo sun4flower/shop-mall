@@ -48,7 +48,7 @@ export default {
         }
     },
     mounted(){
-        //this.$store.dispatch("getData_A",17951827);
+        this.$store.dispatch("getData_A",17951827);
         this.getData_A(17951827)
     },
     methods: {

@@ -65,9 +65,9 @@ export default {
         },
         goToSearch() {
             this.$router.push({path:"/search",query:{name:"classify"}})
-            // this.http(`https://m.gome.com.cn/index.php?ctl=index&act=keywordsPromptNew&keystr=${this.datas}&dotime=1528960286000`).then(res => {
-            //     this.html = res.data
-            // })
+            this.http(`https://m.gome.com.cn/index.php?ctl=index&act=keywordsPromptNew&keystr=${this.datas}&dotime=1528960286000`).then(res => {
+                this.html = res.data
+            })
         }
     },
     computed:{

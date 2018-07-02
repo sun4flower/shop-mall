@@ -10,8 +10,8 @@
 
         </header>
         <div class="scroll-box">
-            <div class="content" v-if="shopCar">
-                <Items v-for="(item,index) in shopCar" :key="index" :item="item"></Items>
+            <div class="content" v-if="product">
+                <Items v-for="(item,index) in product" :key="index" :item="item"></Items>
             </div>
             <div class="car" v-else>
                 购物车为空
@@ -19,11 +19,11 @@
         </div>
         <div class="price">
             <p class="check">
-                <i :class="flag?'iconfont icon-checked':'iconfont icon-unchecked'" @click="cancel"></i>
+                <i :class="flag?'iconfont icon-checked':'iconfont icon-unchecked'" @click="checkAll"></i>
                 <span>全选</span>
             </p>
             <p class="all">
-                <span>合计: {{count}}</span>
+                <span>合计:{{count}}</span>
                 <span>运费</span>
             </p>
             <p class="account" @click="deletes()">{{msg}}</p>
@@ -40,35 +40,25 @@ import observer from "../../utils/observer"
 export default {
     data() {
         return {
-            sum: 0,
             flag: true,
             msg: "结算",
-            arr: []
+            count: 0
         }
     },
-    watch: {
-        checkAll(n, o) {
-            this.flag = n
-        }
-    },
+
     mounted() {
         this.getCart_A();
-        observer.$on("send", (msg) => {
-            if (!msg.flag) {
-                if (this.arr.indexOf(msg.item.wname)) {
-                    this.arr.push(msg.item.wname)
-                }
-            } else {
-                this.arr.map((i, ind) => {
-                    this.arr.splice(ind, 1)
-                })
-            }
-        })
+        this.getCount()
     },
     computed: {
         ...mapState(["shopCar"]),
-        ...mapState(["checkAll"]),
-        ...mapState(["count"]),
+        product() {
+            this.flag = this.shopCar.every(i => {
+                return i.check
+            })
+            this.getCount()
+            return this.shopCar
+        }
 
     },
     methods: {
@@ -76,9 +66,19 @@ export default {
         ...mapActions(["checkAll_A"]),
         ...mapActions(["deleteItem_A"]),
         ...mapActions(["refresh_A"]),
-        cancel() {
+        checkAll() {
             this.flag = !this.flag;
             this.checkAll_A(this.flag)
+        },
+        getCount() {
+            let sum = 0;
+            this.shopCar.map(i => {
+                if (i.check) {
+                    sum += i.count * i.jdPrice
+                }
+                this.count = sum;
+            })
+
         },
         compile() {
             if (this.msg == "结算") {
@@ -89,7 +89,13 @@ export default {
         },
         deletes() {
             if (this.msg == "删除") {
-                axios.post("/delete", { token: getCookie("token"), id: this.arr }).then(res => {
+                let arr = []
+                this.shopCar.map((i, ind) => {
+                    if (i.check) {
+                        arr.push(ind)
+                    }
+                })
+                this.http.post("/delete", { token: getCookie("token"), arr: arr }).then(res => {
                     if (res.data.code == 0) {
                         alert("删除失败")
                     } else {

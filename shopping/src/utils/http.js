@@ -3,7 +3,7 @@ let instance=axios.create({
     header:{
        // "Content-Type":"application/json"
     },
-    baseURL:"http://192.168.191.1:3000/"
+    baseURL:"http://192.168.191.1:3000"
 })
 console.log(process.env.NODE_ENV)
 instance.interceptors.request.use((config)=>{

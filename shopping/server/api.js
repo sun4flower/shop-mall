@@ -225,20 +225,15 @@ module.exports = function (app) {
             } else {
                 let pathname = path.join(__dirname, "./mock/cart.json")
                 let list = JSON.parse(fs.readFileSync(pathname, 'utf-8'));
-                let arr = []
-                list[decoded.username].map((item, ind) => {
-                    req.body.id.map(i => {
-                        if (item.wname == i) {
-                            arr.push(ind)
-                        }
-                    })
+                let arrs=list[decoded.username]
+                req.body.arr.map(i=>{
+                    delete arrs[i]
                 })
-                let newarr = []
-                let str = ""
-                arr.map(i => {
-                    newarr.push(list[decoded.username].slice(i, i + 1)[0])
-                })
-                list[decoded.username] = newarr;
+    
+                list[decoded.username]=[]
+                for(var i in arrs){
+                    list[decoded.username].push(arrs[i])
+                }
                 fs.writeFile(pathname, JSON.stringify(list), (err) => {
                     if (err) {
                         res.json({ code: 0, msg: err })

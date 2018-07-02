@@ -12,7 +12,7 @@ let store = new Vuex.Store({
         check: true,
         count: null,
         n: null,
-        deleteArr:[]
+        deleteArr: []
 
     },
     actions: {
@@ -31,22 +31,26 @@ let store = new Vuex.Store({
                 if (res.data.code == 0) {
                     router.push({ name: "login", params: { from: "shop" } })
                 } else {
-                    commit("getCart_M", { data: res.data.data, infor: payload })
+                    commit("getCart_M", { data: res.data.data, payload: payload })
                 }
             });
+        },
+        checkItem_A({ commit }, payload) {
+            commit("checkItem_M", payload)
         },
         checkAll_A({ commit }, payload) {
             commit("checkAll_M", payload)
         },
-        check_A({ commit }, payload) {
-            commit("check_M", payload)
-
-        },
-        refresh_A({commit}){
+        refresh_A({ commit }) {
             axios.post("http://192.168.191.1:3000/getShopitem", { token: getCookie("token") }).then(res => {
-                commit("refresh_M",res.data.data)
+                if (res.data.code == 0) {
+                    router.push({ name: "login", params: { from: "shop" } })
+                } else {
+                    commit("refresh_M", res.data.data)
+                }
             });
         }
+
     },
     mutations: {
         getData_M(state, payload) {
@@ -55,85 +59,56 @@ let store = new Vuex.Store({
             state.lists = obj;
         },
         getCart_M(state, payload) {
-            state.shopCar = payload.data;
-            if (payload.infor) {
-                let sum = 0;
-                state.shopCar.map(i => {
-                    if (i.wname == payload.infor.item.wname) {
-                        sum += i.jdPrice * 1;
+            if (payload.payload) {
+                let obj = [...state.shopCar]
+                obj.map(i => {
+                    if (i.wname == payload.payload.item.wname) {
+                        i.count = payload.payload.count
                     }
+                    return i
                 })
-                if (payload.infor.flag) {
-                    if (payload.infor.data) {
-                        state.count = (state.count*1 + sum).toFixed(2);
-                    } else {
-                        
-                        if(state.count<=0){
-                            return;
-                        }else{
-                            
-                             state.count = (state.count *1- sum).toFixed(2);
-                        }
-                        
-                       
-                    }
-
-                }
+                state.shopCar = obj;
             } else {
-                state.n = state.shopCar.length;
-                state.deleteArr=state.shopCar;
-                let sum = 0;
-                state.shopCar.map(i => {
-                    sum += i.count * i.jdPrice
+                let obj = [...payload.data]
+                obj.map(i => {
+                    i.check = true;
+                    return i
                 })
-                state.count = sum.toFixed(2);
+                state.shopCar = obj;
             }
+
+        },
+        checkItem_M(state, payload) {
+            let arr = [...state.shopCar]
+            arr.map(i => {
+                if (i.wname == payload.wname) {
+                    i.check = !i.check;
+                    return i
+                }
+            })
         },
         checkAll_M(state, payload) {
-            let sum = 0;
-            if (payload) {
-                state.check = true;
-                state.checkAll = true;
-                state.shopCar.map(i => {
-                    sum += i.count * i.jdPrice
-                })
-                state.count = sum;
-                state.n = state.shopCar.length
-            } else {
-                state.check = false;
-                state.checkAll = false;
-                state.n = 0;
-                state.count = 0;
-            }
-
-        },
-        check_M(state, payload) {
-            let s = payload.item.count * payload.item.jdPrice;
-            if (payload.flag) {
-                state.n = state.n + 1;
-                if (state.n == state.shopCar.length) {
-                    state.checkAll = true;
-                    state.check = true;
+            let arr = [...state.shopCar]
+            arr.map(i => {
+                if (payload) {
+                    i.check = true
+                } else {
+                    i.check = false
                 }
-                
-                state.count = state.count*1 + s;
-            } else {
-                state.n = state.n - 1;
-                state.checkAll = false;
-                state.count = (state.count*1 - s).toFixed(2);
-                if (state.n == 0) {
-                    state.check = false;
-                }
-
-            }
+                return i;
+            })
         },
-        refresh_M(state,payload){
-            state.shopCar=payload;
-            state.count=0;
-            state.n=0;
-            state.check = false;
-            state.checkAll = false;
+        refresh_M(state, payload) {
+            let arr = [...payload]
+            arr.map(i => {
+                i.check = false
+                return i;
+            })
+            state.shopCar = arr;
         }
+
+    },
+    getters: {
     }
 })
 export default store;

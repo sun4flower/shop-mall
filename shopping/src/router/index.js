@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
-import Indexs from "../components/Index/index"
+import Index from "../components/Index/index"
 import Home from "../components/home/index"
 import Login from "../components/login/index"
 import Register from "../components/register/register"
@@ -19,7 +19,7 @@ import ItemDetail from "../components/home/detail/detail"
 import {getCookie} from "../utils/cookies"
 Vue.use(Router)
 let router = new Router({
-    mode:'history',//默认是hash模式
+ //mode:'history',//默认是hash模式
   scrollBehavior(to,from,savePosition){ // 在点击浏览器的“前进/后退”，或者切换导航的时候触发。
     if (to.hash) {
         console.log(to.hash)
@@ -32,12 +32,15 @@ let router = new Router({
       }
   },
     routes: [{
+        path: '*',   // 错误路由[写在最后一个]
+        redirect: '/index/home'   //重定向
+      },{
         path: "/",
-        redirect: "/indexs/home"
+        redirect: "/index/home"
     }, {
-        path: "/indexs",
-        name: "Indexs",
-        component: Indexs,
+        path: "/index",
+        name: "Index",
+        component: Index,
         children: [{
             path: "home",
             name: "home",
@@ -92,7 +95,8 @@ let router = new Router({
         path:"/itemDetail",
         name:"itemDetail",
         component:ItemDetail
-    }]
+    },
+    ]
 })
 router.beforeEach((to, from, next) => {
     let token = getCookie('token')

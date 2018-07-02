@@ -1,7 +1,7 @@
 <template>
     <dl>
         <dt>
-            <i :class="flag?'iconfont icon-checked':'iconfont icon-unchecked'" @click="cancel(item)"></i>
+            <i :class="item.check?'iconfont icon-checked':'iconfont icon-unchecked'" @click="check(item)"></i>
             <img :src="item.imageurl" alt="">
         </dt>
         <dd>
@@ -21,6 +21,7 @@
             </div>
 
         </dd>
+        <toast></toast>
     </dl>
 </template>
 <script>
@@ -39,33 +40,30 @@ export default {
             type: Object
         }
     },
-    watch: {
-        check(n, o) {
-            this.flag = n;
-        }
-    },
     computed: {
-        ...mapState(["check"])
+
     },
     methods: {
+        ...mapActions(["checkItem_A"]),
         ...mapActions(["getCart_A"]),
-        ...mapActions(["check_A"]),
-        addNum(item) {
-            this.http.post("/addNum", { token: getCookie("token"), item: item }).then(res => {
-                this.getCart_A({ flag: this.flag, item: item ,data:true})
-            })
+        check(item) {
+            this.checkItem_A(item)
         },
         subNum(item) {
-            this.http.post("/subNum", { token: getCookie("token"), item: item }).then(res => {
-                this.getCart_A({ flag:this.flag, item: item,data:false})
+            if (item.count <= 1) {
+                this.$toastBus.$emit("toast", "不能再少了！！！")
+            } else {
+                this.http.post("/subNum", { token: getCookie("token"), item: item}).then(res => {
+                     this.getCart_A({item:item,count:item.count-1})
+                })
+            }
+        },
+        addNum(item) {
+            this.http.post("/addNum", { token: getCookie("token"), item: item }).then(res => {
+                this.getCart_A({item:item,count:item.count+1})
             })
-        },
-        cancel(item) {
-            this.flag = !this.flag;
-            this.check_A({ flag: this.flag, item: item })
-            observer.$emit("send",{flag:this.flag,item:this.item})
-        },
-        
+        }
+
     }
 }
 </script>

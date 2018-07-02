@@ -7,6 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     chunkFilename: '[name].bundle.js',
     publicPath: '/dist/',
+    
     filename: 'build.js'
   },
   module: {
@@ -63,7 +64,8 @@ module.exports = {
           '^/proxy': ''
         }
       }
-    }
+    },
+    historyApiFallback: true,
   },
   performance: {
     hints: false

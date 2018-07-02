@@ -103,9 +103,10 @@
     非简单请求是post请求，他会先发起一次预请求，请求成功后再允许请求后台数据
     * 添加购物车使用了组件封装，每一条商品用组件封装以便复用，渲染子组件时，父组件用props给子组件传递数据。在子组件操作数据时，如增加减少，涉及到了子父通讯，
     一共有三种方式传递数据 
-      * 第一种为this.$emit 父组件使用v-bind:"发送的事件事件名"来监听子组件的事件
+      * 第一种为this.$emit 父组件使用v-on:"发送的事件事件名"来监听子组件的事件
       * 第二种是global event bus 定义全局变量来实现组件间通讯
-      * 第三种是vuex 本项目使用了vuex来实现组件间通讯 vuex中通过改变父子组件的checked来实现全选反选功能，当选中全部子组件的时候，通过数据长度和选中组件的个数来判断，如果相等，父组件checked，如不等，父组件unchecked·
+      * 第三种是vuex 
+      本项目使用了vuex来实现购物车功能 请求回来的数据先遍历添加一个check值，当点击每一个商品时改变check值，父组件获取的购物车数据使用computed来监听，当改变check值使用every遍历数据 只要有一个false 就会返回false当点击加减时向请求端口改变数量，并把数量发送给vuex vuex更新数量 删除使用了delete(arr[i])的方法
     * 判断生产模式还是开发模式baseURL:process.env.NODE_ENV=="production"?testUrl:onlineUrl
       向js脚本注入变量new webpack.DefinePlugin()
     * 当客服更改头像时，需要向后台传输图片，需要将图片编码成二进制的数据流，共有两种方法

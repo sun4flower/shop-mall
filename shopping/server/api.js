@@ -13,9 +13,12 @@ var storage = multer.diskStorage({
         cb(null, Date.now() + '.' + pathname[1])
     }
 })
-
+let arr =require("./swiper/swiper") 
 var upload = multer({ storage: storage })
 module.exports = function (app) {
+    app.get("/getBanner",(req,res)=>{
+        res.json({code:0,data:arr})
+    })
     app.post("/user/register", (req, res) => {
         let listPath = path.join(__dirname, "/mock/data.json")
         let list = JSON.parse(fs.readFileSync(listPath).toString())

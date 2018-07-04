@@ -7,7 +7,6 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     chunkFilename: '[name].bundle.js',
     publicPath: '/dist/',
-    
     filename: 'build.js'
   },
   module: {
@@ -44,12 +43,12 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@':path.resolve(__dirname,"./src")
+      '@':path.resolve(__dirname,"./src"),
+     // 'swiper': 'swiper/dist/js/swiper.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
-    historyApiFallback: true,
     noInfo: true,
     overlay: true,
     proxy: {
@@ -65,7 +64,9 @@ module.exports = {
         }
       }
     },
-    historyApiFallback: true,
+    historyApiFallback:{
+      index:'/dist/index.html'
+  }
   },
   performance: {
     hints: false

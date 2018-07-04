@@ -12,7 +12,7 @@ Vue.use(VueLazyLoad,{
     loading:require('./assets/img/loading.jpg')
 })
 Vue.use(http)
-new Vue({
+let vm=new Vue({
   el: '#app',
   router,
   store,

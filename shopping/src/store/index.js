@@ -8,11 +8,8 @@ let store = new Vuex.Store({
     state: {
         lists: {},
         shopCar: [],
-        checkAll: true,
-        check: true,
-        count: null,
-        n: null,
-        deleteArr: []
+        deleteArr: [],
+        scrollTo:''
 
     },
     actions: {
@@ -49,6 +46,9 @@ let store = new Vuex.Store({
                     commit("refresh_M", res.data.data)
                 }
             });
+        },
+        scroll_A({commit},payload){
+            commit("scroll_M",payload)
         }
 
     },
@@ -105,6 +105,9 @@ let store = new Vuex.Store({
                 return i;
             })
             state.shopCar = arr;
+        },
+        scroll_M(state,payload){
+            state.scrollTo=payload;
         }
 
     },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <dl v-if="item.jdPrice">
-      <dt @click="goToDetail(item.clickUrl)">
+      <dt @click="goToDetail(item)">
         <img v-lazy="item.imageurl" alt="">
       </dt>
       <dd>
@@ -36,13 +36,11 @@ export default {
       num: 1
     }
   },
-  mounted() {
-
-  },
   methods: {
     ...mapActions(["addItem_A"]),
-    goToDetail(url) {
-      this.$router.push({ path: "/detail", query: { url: url } })
+    goToDetail(item) {
+    this.$toastBus.$emit("scroll","start")
+      this.$router.push({ path: "/itemDetail", query: { url: "/index/home",item:item.wname } })
     },
     addItem(item) {
       this.http.post("/addCart", { token: getCookie("token"), item: item }).then(res => {

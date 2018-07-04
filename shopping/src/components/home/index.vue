@@ -63,65 +63,101 @@
                 <span>绿色无公害,无污染,无公害,天然有机蔬菜吃的放心，健康第一，安全保证，确保蔬菜安全</span>
             </div>
             <ul class="listsItem" ref="listItem">
-                <li v-for="(item,index) in newdata" :key="index">
-                    <keep-alive>
-                        <ShopItem :item="item"></ShopItem>
-                    </keep-alive>
+                <li v-for="(item,index) in data" :key="index">
+
+                    <ShopItem :item="item"></ShopItem>
+
                 </li>
             </ul>
             <p class="more" ref="more">加载更多</p>
         </div>
-       <toast ref="toast"></toast>
+        <toast ref="toast"></toast>
     </div>
 </template>
 <script>
-//import Swiper from "swiper"
+import Swiper from "swiper"
 import "swiper/dist/css/swiper.css"
 import ShopItem from "../../common/shopItem/shopItem"
 import jsonp from "../../utils/jsonp"
 import axios from "axios"
 import observer from '../../utils/observer';
+import { mapState, mapActions } from "vuex";
+import Vue from "vue"
 export default {
     data() {
         return {
             flag: true,
             n: 1,
+            isFirstEnter:false,
             data: "",
+            scroll: "",
             url: "https://h5api.m.taobao.com/h5/mtop.taobao.wireless.home.load/1.0/?jsv=2.4.11&appKey=12574478&t=1528795798675&sign=b5cc9e50d50441bef8be7813b540488a&api=mtop.taobao.wireless.home.load&v=1.0&type=jsonp&dataType=jsonp&callback=mtopjsonp1&data=%7B%22containerId%22%3A%22main%22%2C%22ext%22%3A%22%7B%5C%22h5_platform%5C%22%3A%5C%22h5%5C%22%2C%5C%22h5_ttid%5C%22%3A%5C%2260000%40taobao_h5_1.0.0%5C%22%7D%22%7D"
         }
     },
-    computed: {
-        newdata() {
-            return this.data
+    beforeRouteEnter(to, from, next) {
+        // 路由导航钩子，此时还不能获取组件实例 `this`，所以无法在data中定义变量（利用vm除外）
+        // 参考 https://router.vuejs.org/zh-cn/advanced/navigation-guards.html
+        // 所以，利用路由元信息中的meta字段设置变量，方便在各个位置获取。这就是为什么在meta中定义isBack
+        // 参考 https://router.vuejs.org/zh-cn/advanced/meta.html
+        if (from.name == 'itemDetail') {
+            to.meta.isBack = true;
+            //判断是从哪个路由过来的，
+            //如果是page2过来的，表明当前页面不需要刷新获取新数据，直接用之前缓存的数据即可
         }
+
+        next();
+    },
+    created() {
+        this.isFirstEnter=true
+        this.getData()
+    },
+    activated() {
+        if (!this.$route.meta.isBack) {
+            // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+            this.$set(this.$data, "data", [])
+            this.getData();
+        }
+        // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+        this.$route.meta.isBack = false;
+        this.$refs.scrollBox.scrollTop=this.scrollTo;
+    },
+    
+    computed: {
+        ...mapState(["scrollTo"])
     },
     mounted() {
-        observer.$on("send",(msg)=>{
-            this.$refs.toast.active(msg)
-        })
-        // new Swiper(this.$refs.swiper, {
-        //     // autoplay:true
-        // }),
-
-        axios.get("/index/recommend.action?_format_=json&page=1").then(res => {
-            this.data = JSON.parse(res.data.recommend).wareInfoList;
-        })
-        // jsonp(this.url,"mtopjsonp1").then(res=>{
-        //     console.log(res)
-        // })
+        new Swiper(this.$refs.swiper, {
+            // autoplay:true
+        }),
+            // jsonp(this.url,"mtopjsonp1").then(res=>{
+            //     console.log(res)
+            // })
+            this.$toastBus.$on("scroll", (msg) => {
+                this.scroll_A(this.scroll)
+            })
     },
     methods: {
+        getData() {
+            axios.get("/index/recommend.action?_format_=json&page=1").then(res => {
+                
+                let list= JSON.parse(res.data.recommend).wareInfoList;
+                this.$set(this.$data, "data", list)
+            })
+        },
+        ...mapActions(["scroll_A"]),
         gotoSearch() {
             this.$router.push({ path: "/search", query: { name: "home" } })
+
         },
         onScroll() {
             let scrT = this.$refs.scrollBox.scrollTop;
+            this.scroll = scrT;
             let docH = this.$refs.scrollBox.offsetHeight;
             let scrH = this.$refs.swiper.offsetHeight + this.$refs.list.offsetHeight + this.$refs.tit.offsetHeight + this.$refs.listItem.offsetHeight + this.$refs.more.offsetHeight;
             if (scrH - docH - scrT < 10 && this.flag) {
                 this.flag = false;
                 this.n = this.n + 1;
-               axios.get("/index/recommend.action?_format_=json&page=" + `${this.n}`).then(res => {
+                axios.get("/index/recommend.action?_format_=json&page=" + `${this.n}`).then(res => {
                     this.data = [...this.data, ...JSON.parse(res.data.recommend).wareInfoList]
                     this.flag = true;
                 });

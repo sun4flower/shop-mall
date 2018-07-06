@@ -71,9 +71,9 @@
       * 具体使用方法 <br />
       需要在路由中先配好{path:"/orderPage/:type"}，在页面中 :to="{name:'orderPage',params:{type:'all'} 使用params传递不同的参数
 3.  项目中具体技术 
-     * 在商品列表页涉及到下拉刷新问题，这里用到了offset、scrollTop等js原生方法。
+    (1) 在商品列表页涉及到下拉刷新问题，这里用到了offset、scrollTop等js原生方法。
     在做项目时模拟了一下后台，主要是我需要使用的各种端口，以及登录时发送cookies的加密，使用了jsonwebtoken来做token加密。在向后台请求数据时，需要结合vuex缓存数据，避免多次向服务器发起请求。
-    * 项目中还涉及到了跨域问题，解决跨域有三种方式，分别是jsonp、proxy代理以及cors。
+    (2) 项目中还涉及到了跨域问题，解决跨域有三种方式，分别是jsonp、proxy代理以及cors。
        第一种jsonp运用了动态创建scrip标签，用他的src属性访问跨域的js脚本，并且需要在全局准备一个函数，服务端会返回一段调用这个函数的js代码，并传递我们调用的数据，我们就可以在这个全局函数中得到这个参数\
     function jsonp(url, names) {
         return new Promise((resolve, reject) => {
@@ -101,15 +101,15 @@
     })
     分为简单请求和非简单请求
     非简单请求是post请求，他会先发起一次预请求，请求成功后再允许请求后台数据
-    * 添加购物车使用了组件封装，每一条商品用组件封装以便复用，渲染子组件时，父组件用props给子组件传递数据。在子组件操作数据时，如增加减少，涉及到了子父通讯，
+    (3) 添加购物车使用了组件封装，每一条商品用组件封装以便复用，渲染子组件时，父组件用props给子组件传递数据。在子组件操作数据时，如增加减少，涉及到了子父通讯，
     一共有三种方式传递数据 
       * 第一种为this.$emit 父组件使用v-on:"发送的事件事件名"来监听子组件的事件
       * 第二种是global event bus 定义全局变量来实现组件间通讯
       * 第三种是vuex 
       本项目使用了vuex来实现购物车功能 请求回来的数据先遍历添加一个check值，当点击每一个商品时改变check值，父组件获取的购物车数据使用computed来监听，当改变check值使用every遍历数据 只要有一个false 就会返回false当点击加减时向请求端口改变数量，并把数量发送给vuex vuex更新数量 删除使用了delete(arr[i])的方法
-    * 判断生产模式还是开发模式baseURL:process.env.NODE_ENV=="production"?testUrl:onlineUrl
+    (4) 判断生产模式还是开发模式baseURL:process.env.NODE_ENV=="production"?testUrl:onlineUrl
       向js脚本注入变量new webpack.DefinePlugin()
-    * 当客服更改头像时，需要向后台传输图片，需要将图片编码成二进制的数据流，共有两种方法
+   (5) 当客服更改头像时，需要向后台传输图片，需要将图片编码成二进制的数据流，共有两种方法
       * 第一种是使用h5新的api=>formData,使用方法</br>let 实例化formData = new FormData() 添加图片formData.append('img', e.target.files[0])
       请求后台接口时将图片作为参数传给后台，后台可以使用multer包来解析保存
       * 第二种方法为form表单本身就有属性enctype="multipart/form-data"</br>
@@ -117,7 +117,7 @@
         ①application/x-www-form-urlencoded。默认的编码方式。但是在用文本的传输和MP3等大型文件的时候，使用这种编码就显得 效率低下。 
         ②multipart/form-data 。 指定传输数据为二进制类型，比如图片、mp3、文件。 
         ③text/plain。纯文体的传输。空格转换为 “+” 加号，但不对特殊字符编码。
-    * 添加地址时有多选框，这里使用了vue-multiselect
-    * keep-alive 在路由那设置一下meta信息 keepalive isback 在router-view做一下根据keep-alive做判断是否需要缓存  在需要缓存的页面做判断 如果是从详情页返回的 isback设成true 并且在activated做判断，如果isback是假的时候需要重新请求数据  滚动到具体位置时 先把坐标存到vuex 然后也在activated这个阶段然滚动的盒子滚动到具体位置
+    (6) 添加地址时有多选框，这里使用了vue-multiselect
+    (7) keep-alive 在路由那设置一下meta信息 keepalive isback 在router-view做一下根据keep-alive做判断是否需要缓存  在需要缓存的页面做判断 如果是从详情页返回的 isback设成true 并且在activated做判断，如果isback是假的时候需要重新请求数据  滚动到具体位置时 先把坐标存到vuex 然后也在activated这个阶段然滚动的盒子滚动到具体位置
 4.  做项目时遇到了一个渲染问题，主要因为数据中有个别数据与其他数据不同，如商品列表数据中推荐了一些商店，在就需要不同的dom结构，我困扰了一天，最后想到了用v-if这个指令来实现不同的dom渲染结构
 

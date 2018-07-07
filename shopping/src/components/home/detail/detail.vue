@@ -10,15 +10,18 @@
             <span @click="jump">详情</span>
             <span @click="jump">推荐</span> -->
         </header>
-        <div class="scroll" >
+        <div class="scroll">
 
             <div class="good" id="a0">
-
-                <div class="swiper-container" ref="swiper">
+                <!-- <div class="swiper-container" ref="swiper">
                     <ul class="swiper-wrapper">
-                        <li class="swiper-slide" v-for="(item,index) in  list" :key="index"><img :src="item.tit" alt=""></li>
+                        <li class="swiper-slide" v-for="(item,index) in list" :key="index">
+                             <img src="@/assets/img/双店铺banner2.png" alt="">
+                        </li>
                     </ul>
-                </div>
+                </div> -->
+                <p>颜色分类：<input type="radio" name="" id="">粉红</p>
+                <p>尺码：<span><input type="radio" name="" id="" value="粉红">粉红</span></p>
 
             </div>
             <div class="estamite" id="a1">
@@ -36,26 +39,32 @@
 </template>
 <script>
 import Vue from "vue"
+import Swiper from "swiper"
+import "swiper/dist/css/swiper.css"
 export default {
-    data(){
-        return{
-            item:"a0",
-            letter:"",
-            list:[]
+    data() {
+        return {
+            item: "a0",
+            letter: "",
+            list: [],
         }
     },
-    created(){
-        this.http.get("/getBanner").then(res=>{
-            this.list=res.data.data
+    created() {
+        this.http.get("/getBanner").then(res => {
+            console.log(res.data)
+            this.list = res.data.data
         })
     },
-    mounted(){
-        this.letter=this.$route.query.item
-       console.log(this.$route.query.item)
+    mounted() {
+        new Swiper(this.$refs.swiper, {
+            // autoplay:true
+        }),
+        this.letter = this.$route.query.item
+        console.log(this.$route.query.item)
     },
-    filters:{
-        disCount:(value)=>{
-            return value*2
+    filters: {
+        disCount: (value) => {
+            return value * 2
         }
     }
 }
@@ -68,16 +77,16 @@ export default {
   flex-direction: column;
 }
 .header {
-    width: 100%;
+  width: 100%;
   height: 0.9rem;
   display: flex;
   justify-content: space-around;
   line-height: 0.9rem;
 }
-.scroll{
-      width: 100%;
-    flex:1;
-    overflow: scroll;
+.scroll {
+  width: 100%;
+  flex: 1;
+  overflow: scroll;
 }
 .good {
   width: 100%;
@@ -100,8 +109,11 @@ export default {
 .command {
   height: 16rem;
 }
-.active{
-    border-bottom: 1px solid red;
+.active {
+  border-bottom: 1px solid red;
+}
+img{
+    width: 100%;
 }
 </style>
 

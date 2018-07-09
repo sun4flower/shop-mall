@@ -120,4 +120,4 @@
     (6) 添加地址时有多选框，这里使用了vue-multiselect
     (7) keep-alive 在路由那设置一下meta信息 keepalive isback 在router-view做一下根据keep-alive做判断是否需要缓存  在需要缓存的页面做判断 如果是从详情页返回的 isback设成true 并且在activated做判断，如果isback是假的时候需要重新请求数据  滚动到具体位置时 先把坐标存到vuex 然后也在activated这个阶段然滚动的盒子滚动到具体位置
 4.  做项目时遇到了一个渲染问题，主要因为数据中有个别数据与其他数据不同，如商品列表数据中推荐了一些商店，在就需要不同的dom结构，我困扰了一天，最后想到了用v-if这个指令来实现不同的dom渲染结构
-
+   Date.parse在ios下不支持"-"格式的时间格式，需要使用/格式的
